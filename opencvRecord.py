@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import cv2
+import time
 
 
 #Just change these parameters for each test. These control the resolution, frame rate and the output file name.
@@ -53,6 +54,7 @@ def get_video_type(filename):
 cap = cv2.VideoCapture(0)
 out = cv2.VideoWriter(filename, get_video_type(filename), 25, get_dims(cap, res))
 
+startTime = time.time()
 # while True:
 for frameCount in range(0, 150):
     ret, frame = cap.read()
@@ -62,7 +64,10 @@ for frameCount in range(0, 150):
         break
     print(frameCount)
     frameCount += 1
+endTime = time.time()
 
+frameRate = frameCount/(endTime-startTime)
+print(frameRate)
 
 cap.release()
 out.release()
