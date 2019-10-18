@@ -6,9 +6,9 @@ import time
 
 #Just change these parameters for each test. These control the resolution, frame rate and the output file name.
 #The code runs for 150 frames and automatically closes. For 30 FPS, this is around ~5 to 6 seconds.
-filename = 'opencvWindows1080.avi'
-frames_per_second = 30.0
 res = '1080p'
+filename = res + 'openCVRecordNewSD.mp4'
+frames_per_second = 30.0
 
 # Set resolution for the video capture
 # Function adapted from https://kirr.co/0l6qmh
