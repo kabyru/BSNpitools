@@ -18,17 +18,23 @@ except socket.error:
 while True:
     try:
         serverRecieve = s.recv(1024)
+
+        if (serverRecieve.decode() == "record"):
+            print("Record request recieved.")
+            proc = subprocess.Popen("ffmpeg -ar 44100 -ac 2 -f alsa -i hw:1,0 -f v4l2 -codec:v h264 -framerate 30 -video_size 1920X1080 -itsoffset 0.5 -i /dev/video0 -copyinkf -codec:v copy -g 10 -f mp4 test1.mp4", shell=False, stdin=None, stdout=None, stderr=None, close_fds=True, preexec_fn=os.setsid)
+            procID = os.getpgid(proc.pid)
+            try:
+                s.send(bytes(str(procID), "utf-8"))
+            except socket.error:
+                print("Error sending data.")
+        
+        elif (serverRecieve.decode() == "end"):
+            os.system("kill " + str(procID))
+            print("Recording has been ended.")
+
     except socket.error:
         print("Nothing to recieve!")
         sys.exit()
-    if (serverRecieve.decode() == "record"):
-        print("Record request recieved.")
-        proc = subprocess.Popen("ffmpeg -ar 44100 -ac 2 -f alsa -i hw:1,0 -f v4l2 -codec:v h264 -framerate 30 -video_size 1920X1080 -itsoffset 0.5 -i /dev/video0 -copyinkf -codec:v copy -g 10 -f mp4 test1.mp4", shell=True, stdin=None, stdout=None, stderr=None, close_fds=True, preexec_fn=os.setsid)
-        procID = os.getpgid(proc.pid)
-        try:
-            s.send(bytes(procID, "utf-8"))
-        except socket.error:
-            print("Error sending data.")
         
         
             
